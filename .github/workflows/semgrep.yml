@@ -1,0 +1,24 @@
+name: Semgrep — CLI
+
+on:
+  push:
+    branches: [ main, tast-fest ]
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  semgrep:
+    name: semgrep/cli
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      - name: Install semgrep
+        run: pip install --upgrade pip semgrep
+      - name: Run semgrep (public rules / p/ci)
+        run: semgrep --config=p/ci --timeout 120
